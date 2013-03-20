@@ -1,44 +1,48 @@
 module Gutenberg
   class BookParser
+    
+    END_OF_BOOK = "*** END OF THIS PROJECT GUTENBERG EBOOK"
 
     def initialize(file, chapters)
       @file = file
       @chapters = chapters.reverse.map{|c| Chapter.new(c)}
-      @next = Chapter.null()
-      @current = Chapter.null()
+      @next = nil
+      @current = nil
       @parsed = []
     end
 
     def parse
       @next = get_next_chapter()
       self.paragraphs().each do |paragraph|
-        break if paragraph.end_of_book?
-        if paragraph.has_text?
-          if @next.begins_with?(paragraph)
+        break if paragraph.start_with?(END_OF_BOOK)
+        if !paragraph.empty?
+          if @next && @next.begins_with?(paragraph)
             start_next_chapter(paragraph) 
           else
-            @current.add(paragraph)
+            @current.add(paragraph) if !@current.nil?
           end
         end
       end 
       return @parsed
     end
-
-    def start_next_chapter(paragraph)
-      @current = @next
-      @current.title = paragraph.text
-      @parsed << @current if !@current.is_null?
-      @next = get_next_chapter()
-    end
     
     def paragraphs
       file_text = @file.read()
       paragraphs = file_text.split("\n\n")
-      return paragraphs.map{ |p| Paragraph.new(p) }
+      return paragraphs.map{ |p| p.strip() }
     end
 
+    private 
+
+    def start_next_chapter(paragraph)
+      @current = @next
+      @current.title = paragraph
+      @parsed << @current if !@current.nil?
+      @next = get_next_chapter()
+    end
+    
     def get_next_chapter
-      return @chapters.empty? ? Chapter.null() : @chapters.pop()
+      return @chapters.empty? ? nil : @chapters.pop()
     end
 
   end

@@ -15,7 +15,7 @@ module Gutenberg
       chapters = @mobydick.parse()
       chapter1 = chapters[2]
       paragraph1 = chapter1.paragraphs.first
-      paragraph1.text.start_with?("Call me Ishmael.").should == true
+      paragraph1.start_with?("Call me Ishmael.").should == true
     end
 
   end

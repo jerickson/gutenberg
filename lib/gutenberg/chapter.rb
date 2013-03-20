@@ -1,8 +1,6 @@
 module Gutenberg
   class Chapter
 
-    NULL = "Null.Object"
-
     attr_reader :paragraphs
     attr_accessor :title
     
@@ -12,20 +10,12 @@ module Gutenberg
       @paragraphs = []
     end
 
-    def begins_with?(text)
-      return text.starts_with?(@header)
+    def begins_with?(paragraph)
+      return paragraph.start_with?(@header)
     end
 
     def add(paragraph)
       @paragraphs << paragraph
-    end
-
-    def is_null?
-      return @header == NULL
-    end
-
-    def self.null()
-      return Chapter.new(NULL) 
     end
     
   end
