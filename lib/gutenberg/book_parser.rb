@@ -55,7 +55,7 @@ module Gutenberg
     end
 
     def get_file()
-      return File.new('files/moby.txt', 'r')
+      return File.new(path_to_file(), 'r')
     end
 
     def get_chapters()
@@ -69,6 +69,10 @@ module Gutenberg
       return chapters
     end
 
+    def path_to_file
+      File.join(File.dirname(File.expand_path(__FILE__)), '../../files/moby.txt')
+    end
+    
   end
 
 end
